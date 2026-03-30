@@ -105,15 +105,16 @@ def fetch_data():
         if (done_date.lower() == 'pending' or not done_date) and row_date:
             pending_count += 1
             
-        # 5. Detailed Rows for Template 1: Include if Done date == target_date OR Done date == "Pending"
-        if done_date == target_date or done_date.lower() == 'pending':
+        # 5. Detailed Rows: Include if Done date == target_date, OR Done date is "Pending",
+        #    OR Done date is empty but Date matches target_date
+        if done_date == target_date or done_date.lower() == 'pending' or (not done_date and row_date == target_date):
             # Format: [Date, Email From, Email Subject, Total items, Done date]
             detailed_rows.append([
                 row[0], 
                 row[3], 
                 row[4], 
                 row[5], 
-                row[12] if row[12] else "Pending"
+                row[12] if row[12].strip() else "Pending"
             ])
 
     return target_date, emails_received, emails_completed, total_completed_items, pending_count, detailed_rows
