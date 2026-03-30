@@ -164,7 +164,7 @@ def format_html(target_date, emails_received, emails_completed, total_completed_
     </head>
     <body>
         <p>Hi Rupesh,</p>
-        <p>Please see below summary and details with received and done date is attached for reference.</p>
+        <p>Please see below mentioned summary report for your reference.</p>
         
         <!-- Summary Table -->
         <table>
