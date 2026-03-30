@@ -34,13 +34,18 @@ def get_google_client():
     except Exception:
         pass
 
-    # 2. Fallback to raw JSON
+    # 2. Fallback to raw JSON (with cleanup for literal newlines)
     if not creds_dict:
         try:
-            creds_dict = json.loads(creds_raw)
-            print("Successfully loaded credentials via Raw JSON.")
-        except json.JSONDecodeError as e:
-            raise ValueError(f"CRITICAL: GOOGLE_CREDENTIALS_JSON is malformed. Error: {e}")
+            cleaned_raw = creds_raw.replace('\r\n', '\\n').replace('\n', '\\n')
+            creds_dict = json.loads(cleaned_raw)
+            print("Successfully loaded credentials via Raw JSON (auto-fixed).")
+        except Exception:
+            try:
+                creds_dict = json.loads(creds_raw)
+                print("Successfully loaded credentials via Raw JSON.")
+            except json.JSONDecodeError as e:
+                raise ValueError(f"CRITICAL: GOOGLE_CREDENTIALS_JSON is malformed. Error: {e}")
 
     scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']
     creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
