@@ -9,7 +9,7 @@ from jinja2 import Template
 import base64
 
 # Configuration
-SPREADSHEET_ID = '1tQ5wMw3m7ZdlQx7BuNBeinokDjCWx8xc8LT6YL16TYI'
+SPREADSHEET_ID = '11vFXr-7xKguLY_sa9Gi6Ne1AgA78MiY89RiVON_jrQk'
 SMTP_HOST = 'secure.emailsrvr.com'
 SMTP_PORT = 465
 SENDER_EMAIL = 'mayur.kambli@artworkservicesusa.com'
