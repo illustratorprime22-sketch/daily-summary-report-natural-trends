@@ -1,8 +1,6 @@
 name: Natural Trends Daily Report
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
     # Triggered by Apps Script or manual run from the Actions tab
 
