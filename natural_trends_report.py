@@ -15,8 +15,8 @@ SMTP_PORT = 465
 SENDER_EMAIL = 'mayur.kambli@artworkservicesusa.com'
 
 # Recipients
-RECIPIENTS_TO = ['rupesh.pardeshi@artworkservicesusa.com']
-RECIPIENTS_CC = ['']
+RECIPIENTS_TO = ['sharedart@naturaltrends.com']
+RECIPIENTS_CC = ['nikki@naturaltrends.com', 'joel@naturaltrends.com', 'rupesh.pardeshi@artworkservicesusa.com']
 RECIPIENTS_BCC = ['mayur.kambli@artworkservicesusa.com']
 
 def get_google_client():
@@ -135,7 +135,7 @@ def format_html(target_date, emails_received, emails_completed, total_completed_
         </style>
         </head>
         <body>
-            <p>Hi Rupesh,</p>
+            <p>Hi team,</p>
             <p>Please see below summary.</p>
             <table>
                 <tr><td class="header-cell">Natural Trends</td><td></td></tr>
@@ -163,7 +163,7 @@ def format_html(target_date, emails_received, emails_completed, total_completed_
     </style>
     </head>
     <body>
-        <p>Hi Rupesh,</p>
+        <p>Hi team,</p>
         <p>Please see below mentioned summary report for your reference.</p>
         
         <!-- Summary Table -->
