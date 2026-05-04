@@ -15,8 +15,8 @@ SMTP_PORT = 465
 SENDER_EMAIL = 'mayur.kambli@artworkservicesusa.com'
 
 # Recipients
-RECIPIENTS_TO = ['sharedart@naturaltrends.com']
-RECIPIENTS_CC = ['nikki@naturaltrends.com', 'joel@naturaltrends.com', 'Victoria@naturaltrends.com', 'rupesh.pardeshi@artworkservicesusa.com']
+RECIPIENTS_TO = ['mayur.online9@gmail.com']
+RECIPIENTS_CC = ['mayur.kambli@artworkservicesusa.com']
 RECIPIENTS_BCC = ['mayur.kambli@artworkservicesusa.com']
 
 def get_google_client():
