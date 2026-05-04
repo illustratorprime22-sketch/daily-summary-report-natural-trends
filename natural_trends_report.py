@@ -7,6 +7,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 from jinja2 import Template
 import base64
+from datetime import datetime
 
 # Configuration
 SPREADSHEET_ID = '11vFXr-7xKguLY_sa9Gi6Ne1AgA78MiY89RiVON_jrQk'
@@ -92,6 +93,9 @@ def fetch_data():
     pending_count = 0
     detailed_rows = []
 
+    today = datetime.now()
+    today_str = f"{today.day}-{today.strftime('%b-%y')}"
+
     for row in rows:
         if len(row) < 16: # Pad row if shorter than index P (15)
             row = row + [""] * (16 - len(row))
@@ -99,6 +103,9 @@ def fetch_data():
         row_date_raw = str(row[0]).strip()
         row_date = normalize_date(row_date_raw)
         
+        if row_date == today_str:
+            continue
+            
         email_subject = str(row[6]).strip()
         
         done_date_raw = str(row[15]).strip() # Column P
