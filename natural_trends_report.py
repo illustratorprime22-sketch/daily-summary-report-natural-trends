@@ -72,6 +72,18 @@ def fetch_data():
     # Map headers to column indices based on image:
     # A(0): Date, D(3): Email From, E(4): Email subject, F(5): Total items, M(12): Done date
     headers = all_data[0]
+    def normalize_date(d):
+        d = d.strip()
+        if not d: return ""
+        # Handle formats like 1-May-26 and 01-May-26
+        parts = d.split('-')
+        if len(parts) == 3:
+            day = parts[0].lstrip('0')
+            return f"{day}-{parts[1]}-{parts[2]}"
+        return d
+
+    target_date_norm = normalize_date(target_date)
+
     rows = all_data[1:]
     
     emails_received = 0
@@ -81,42 +93,46 @@ def fetch_data():
     detailed_rows = []
 
     for row in rows:
-        if len(row) < 15: # Pad row if shorter than index O
-            row = row + [""] * (15 - len(row))
+        if len(row) < 16: # Pad row if shorter than index P (15)
+            row = row + [""] * (16 - len(row))
         
-        row_date = str(row[0]).strip()
-        done_date = str(row[14]).strip()
-        total_items = str(row[7]).strip()
+        row_date_raw = str(row[0]).strip()
+        row_date = normalize_date(row_date_raw)
+        
+        email_subject = str(row[6]).strip()
+        
+        done_date_raw = str(row[15]).strip() # Column P
+        done_date = normalize_date(done_date_raw)
+        
+        total_items = str(row[7]).strip() # Column H
         
         # 1. Emails Received: Date matches target_date
-        if row_date == target_date:
+        if row_date == target_date_norm:
             emails_received += 1
             
         # 2. Emails Completed: Done date matches target_date
-        # 3. Total Items: Sum where Done date matches target_date
-        if done_date == target_date:
+        if done_date == target_date_norm:
             emails_completed += 1
             try:
-                total_completed_items += int(total_items) if total_items else 0
+                # Clean total_items string
+                val = "".join(filter(str.isdigit, total_items))
+                total_completed_items += int(val) if val else 0
             except:
                 pass
         
-        # 4. Pending: Done date is "Pending" or empty (but has a Date in col A)
-        if (done_date.lower() == 'pending' or not done_date) and row_date:
+        # 3. Pending: Done date is "Pending" or empty (but has a Date in col A)
+        is_pending = not done_date or done_date.lower() == 'pending'
+        if is_pending and row_date and email_subject:
             pending_count += 1
             
-        # 5. Detailed Rows: Include if Done date == target_date, OR Done date is blank/Pending
-        #    (blank Done Date = always include, regardless of received date)
-        is_pending = not done_date or done_date.lower() == 'pending'
-        if (done_date == target_date or is_pending) and row_date:
-            # Format: [Date, Email From, Email Subject, Total items, Done date]
-            # Count should be blank for Pending rows
+        # 4. Detailed Rows: ONLY include items for the target date
+        if (row_date == target_date_norm or done_date == target_date_norm):
             detailed_rows.append([
-                row[0], 
-                row[5], 
-                row[6], 
+                row_date_raw, 
+                row[5], # Email From
+                row[6], # Email Subject
                 row[7] if not is_pending else "", 
-                row[14] if row[14].strip() else "Pending"
+                done_date_raw if done_date_raw.strip() else "Pending"
             ])
 
     return target_date, emails_received, emails_completed, total_completed_items, pending_count, detailed_rows
