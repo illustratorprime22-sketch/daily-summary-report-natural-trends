@@ -63,20 +63,13 @@ def fetch_data():
     
     # 2. Get Data from Natural Trends
     ws_trends = sh.worksheet("Natural Trends")
-    # Fetch all data (skipping the header row 1 if it's always the same)
-    # Looking at the image, row 1, 5, 9 etc. are headers/red bars.
-    # Actually, let's get all and filter programmatically.
     all_data = ws_trends.get_all_values()
     if not all_data:
         return target_date, 0, 0, 0, 0, []
 
-    # Map headers to column indices based on image:
-    # A(0): Date, D(3): Email From, E(4): Email subject, F(5): Total items, M(12): Done date
-    headers = all_data[0]
     def normalize_date(d):
         d = d.strip()
         if not d: return ""
-        # Handle formats like 1-May-26 and 01-May-26
         parts = d.split('-')
         if len(parts) == 3:
             day = parts[0].lstrip('0')
@@ -84,7 +77,6 @@ def fetch_data():
         return d
 
     target_date_norm = normalize_date(target_date)
-
     rows = all_data[1:]
     
     emails_received = 0
@@ -103,11 +95,17 @@ def fetch_data():
         row_date_raw = str(row[0]).strip()
         row_date = normalize_date(row_date_raw)
         
-        if row_date == today_str:
+        # Skip if no date or if it matches today
+        if not row_date or row_date == today_str:
             continue
             
+        email_from = str(row[5]).strip()
         email_subject = str(row[6]).strip()
         
+        # --- VALIDATION: Skip header rows and empty placeholder rows ---
+        if not email_subject or email_subject.lower() == 'email subject' or email_from.lower() == 'email from':
+            continue
+            
         done_date_raw = str(row[15]).strip() # Column P
         done_date = normalize_date(done_date_raw)
         
@@ -121,7 +119,6 @@ def fetch_data():
         if done_date == target_date_norm:
             emails_completed += 1
             try:
-                # Clean total_items string
                 val = "".join(filter(str.isdigit, total_items))
                 total_completed_items += int(val) if val else 0
             except:
@@ -129,7 +126,7 @@ def fetch_data():
         
         # 3. Pending: Done date is "Pending" or empty (but has a Date in col A)
         is_pending = not done_date or done_date.lower() == 'pending'
-        if is_pending and row_date and email_subject:
+        if is_pending:
             pending_count += 1
             
         # 4. Detailed Rows: ONLY include items for the target date
