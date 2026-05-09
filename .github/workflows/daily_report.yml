@@ -2,7 +2,9 @@ name: Natural Trends Daily Report
 
 on:
   workflow_dispatch:
-    # Triggered by Apps Script or manual run from the Actions tab
+  schedule:
+    - cron: '45 13 * * 1-5' # 7:15 PM IST
+
 
 jobs:
   build:
