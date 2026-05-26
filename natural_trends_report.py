@@ -17,7 +17,7 @@ SENDER_EMAIL = 'mayur.kambli@artworkservicesusa.com'
 
 # Recipients
 RECIPIENTS_TO = ['sharedart@naturaltrends.com']
-RECIPIENTS_CC = ['nikki@naturaltrends.com', 'joel@naturaltrends.com', 'victoria@naturaltrends.com', 'nilima.shete@artworkservicesusa.com', 'rupesh.pardeshi@artworkservicesusa.com', 'ashok.sharma@artworkservicesusa.com']
+RECIPIENTS_CC = ['nikki@naturaltrends.com', 'joel@naturaltrends.com', 'victoria@naturaltrends.com', 'aws.naturaltrends@artworkservicesusa.com', 'rupesh.pardeshi@artworkservicesusa.com', 'ashok.sharma@artworkservicesusa.com']
 RECIPIENTS_BCC = ['mayur.kambli@artworkservicesusa.com']
 
 def get_google_client():
